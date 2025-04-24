@@ -1,0 +1,84 @@
+﻿@model Homework1.Models.RecordPageViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- 新增記錄表單 -->
+        <div class="col-md-6">
+            <h2 class="mb-4">新增記錄</h2>
+            <form asp-action="Add" method="post">
+                <div class="mb-3">
+                    <label asp-for="NewRecord.Category" class="form-label"></label>
+                    <select asp-for="NewRecord.Category" class="form-select">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="1">收入</option>
+                        <option value="2">支出</option>
+                    </select>
+                    <span asp-validation-for="NewRecord.Category" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="NewRecord.Amount" class="form-label"></label>
+                    <input asp-for="NewRecord.Amount" class="form-control" />
+                    <span asp-validation-for="NewRecord.Amount" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="NewRecord.Date" class="form-label"></label>
+                    <input asp-for="NewRecord.Date" class="form-control" type="date" />
+                    <span asp-validation-for="NewRecord.Date" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="NewRecord.Note" class="form-label"></label>
+                    <textarea asp-for="NewRecord.Note" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="NewRecord.Note" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">新增記錄</button>
+            </form>
+        </div>
+
+        <!-- 顯示最新三筆記錄 -->
+        <div class="col-md-6">
+            <h2 class="mb-4">最新記錄</h2>
+            @if (Model.LatestThreeRecords != null && Model.LatestThreeRecords.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>編號</th>
+                            <th>分類</th>
+                            <th>金額</th>
+                            <th>日期</th>
+                            <th>備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.LatestThreeRecords)
+                        {
+                            <tr>
+                                <td>@record.Id</td>
+                                <td>@(record.Category == 1 ? "收入" : record.Category == 2 ? "支出" : "未知")</td>
+                                <td>@record.Amount</td>
+                                <td>@record.Date.ToString("yyyy-MM-dd")</td>
+                                <td>@record.Note</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    尚無記錄資訊。
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
