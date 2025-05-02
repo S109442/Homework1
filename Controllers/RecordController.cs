@@ -17,18 +17,23 @@ namespace Homework1.Controllers
         // GET: /Record
         public async Task<IActionResult> Index()
         {
-            var latestThree = await _context.Records
+            // 先取得資料後，再產生順序號碼
+            var latestThreeRecords = await _context.AccountBook
                 .OrderByDescending(r => r.Id)
                 .Take(3)
-                .Select(r => new RecordViewModel
-                {
-                    Id = r.Id,
-                    Category = r.Category,
-                    Amount = r.Amount,
-                    Date = r.Date,
-                    Note = r.Note
-                })
                 .ToListAsync();
+
+            var latestThree = latestThreeRecords
+                .Select((r, index) => new RecordViewModel
+                {
+                    // 產生從1開始的順序號碼
+                    Id = index + 1,
+                    Category = r.Categoryyy+1,
+                    Amount = r.Amounttt,
+                    Date = r.Dateee,
+                    Note = r.Remarkkk
+                })
+                .ToList();
 
             var viewModel = new RecordPageViewModel
             {
@@ -49,33 +54,37 @@ namespace Homework1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // 若表單驗證失敗，重新載入新三筆資料顯示
-                viewModel.LatestThreeRecords = await _context.Records
+                // 若表單驗證失敗，先取得資料，再產生順序號碼
+                var latestThreeRecords = await _context.AccountBook
                     .OrderByDescending(r => r.Id)
                     .Take(3)
-                    .Select(r => new RecordViewModel
-                    {
-                        Id = r.Id,
-                        Category = r.Category,
-                        Amount = r.Amount,
-                        Date = r.Date,
-                        Note = r.Note
-                    })
                     .ToListAsync();
+
+                viewModel.LatestThreeRecords = latestThreeRecords
+                    .Select((r, index) => new RecordViewModel
+                    {
+                        // 產生從1開始的順序號碼
+                        Id = index + 1,
+                        Category = r.Categoryyy+1,
+                        Amount = r.Amounttt,
+                        Date = r.Dateee,
+                        Note = r.Remarkkk
+                    })
+                    .ToList();
 
                 return View("Index", viewModel);
             }
 
             // 儲存新資料
-            var newRecord = new Record
+            var newAccountBook = new AccountBook
             {
-                Category = viewModel.NewRecord.Category,
-                Amount = viewModel.NewRecord.Amount,
-                Date = viewModel.NewRecord.Date,
-                Note = viewModel.NewRecord.Note
+                Categoryyy = viewModel.NewRecord.Category-1, // Corrected property name
+                Amounttt = viewModel.NewRecord.Amount,
+                Dateee = viewModel.NewRecord.Date,
+                Remarkkk = viewModel.NewRecord.Note
             };
 
-            _context.Records.Add(newRecord);
+            _context.AccountBook.Add(newAccountBook);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
