@@ -19,8 +19,8 @@ namespace Homework1.Controllers
         {
             // 先取得資料後，再產生順序號碼
             var latestThreeRecords = await _context.AccountBook
-                .OrderByDescending(r => r.Id)
-                .Take(3)
+                .OrderByDescending(r => r.Dateee)
+                .Take(5)
                 .ToListAsync();
 
             var latestThree = latestThreeRecords
@@ -56,8 +56,8 @@ namespace Homework1.Controllers
             {
                 // 若表單驗證失敗，先取得資料，再產生順序號碼
                 var latestThreeRecords = await _context.AccountBook
-                    .OrderByDescending(r => r.Id)
-                    .Take(3)
+                    .OrderByDescending(r => r.Dateee)
+                    .Take(5)
                     .ToListAsync();
 
                 viewModel.LatestThreeRecords = latestThreeRecords
