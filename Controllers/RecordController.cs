@@ -2,38 +2,25 @@
 using Microsoft.EntityFrameworkCore;
 using Homework1.Data;
 using Homework1.Models;
+using Homework1.Services;
 
 namespace Homework1.Controllers
 {
     public class RecordController : Controller
     {
+        private readonly IAccountBookService _accountBookService;
         private readonly AppDbContext _context;
 
-        public RecordController(AppDbContext context)
+        public RecordController(IAccountBookService accountBookService, AppDbContext context)
         {
+            _accountBookService = accountBookService;
             _context = context;
         }
 
         // GET: /Record
         public async Task<IActionResult> Index()
         {
-            // 先取得資料後，再產生順序號碼
-            var latestThreeRecords = await _context.AccountBook
-                .OrderByDescending(r => r.Dateee)
-                .Take(5)
-                .ToListAsync();
-
-            var latestThree = latestThreeRecords
-                .Select((r, index) => new RecordViewModel
-                {
-                    // 產生從1開始的順序號碼
-                    Id = index + 1,
-                    Category = r.Categoryyy+1,
-                    Amount = r.Amounttt,
-                    Date = r.Dateee,
-                    Note = r.Remarkkk
-                })
-                .ToList();
+            var latestThree = await _accountBookService.GetLatestRecordViewModelsAsync(5);
 
             var viewModel = new RecordPageViewModel
             {
@@ -54,24 +41,7 @@ namespace Homework1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // 若表單驗證失敗，先取得資料，再產生順序號碼
-                var latestThreeRecords = await _context.AccountBook
-                    .OrderByDescending(r => r.Dateee)
-                    .Take(5)
-                    .ToListAsync();
-
-                viewModel.LatestThreeRecords = latestThreeRecords
-                    .Select((r, index) => new RecordViewModel
-                    {
-                        // 產生從1開始的順序號碼
-                        Id = index + 1,
-                        Category = r.Categoryyy+1,
-                        Amount = r.Amounttt,
-                        Date = r.Dateee,
-                        Note = r.Remarkkk
-                    })
-                    .ToList();
-
+                viewModel.LatestThreeRecords = await _accountBookService.GetLatestRecordViewModelsAsync(5);
                 return View("Index", viewModel);
             }
 
