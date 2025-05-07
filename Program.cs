@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // 註冊 IAccountBookService 與其實作 AccountBookService
-builder.Services.AddScoped<IAccountBookService, AccountBookService>();
+builder.Services.AddTransient<IAccountBookService, AccountBookService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

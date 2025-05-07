@@ -4,20 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Homework1.Services
 {
-    public interface IAccountBookService
+    public class AccountBookService(AppDbContext _context) : IAccountBookService
     {
-        Task<List<RecordViewModel>> GetLatestRecordViewModelsAsync(int count);
-    }
-
-    public class AccountBookService : IAccountBookService
-    {
-        private readonly AppDbContext _context;
-
-        public AccountBookService(AppDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<List<RecordViewModel>> GetLatestRecordViewModelsAsync(int count)
         {
             var latestRecords = await _context.AccountBook
@@ -38,6 +26,11 @@ namespace Homework1.Services
                 .ToList();
 
             return viewModels;
+        }
+        public async Task AddAccountBookAsync(AccountBook accountBook)
+        {
+            _context.AccountBook.Add(accountBook);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Homework1.Models.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Homework1.Models
 {
@@ -14,13 +15,18 @@ namespace Homework1.Models
                                          Category == 2 ? "支出" : "未知";
 
         [Required]
-        [Range(0, 100000000)] // 同樣允許 0
+        [Range(1, int.MaxValue,ErrorMessage ="金額超出範圍!")]
+        [PositiveInteger(ErrorMessage = "金額需要為正整數!")]
         public int Amount { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
+        [NotFutureDate(ErrorMessage = "日期不能大於今天")]
         public DateTime Date { get; set; }
 
+        [Required(ErrorMessage = "請輸入Note")]
+        [StringLength(100, ErrorMessage = "Note不能超過100字")]
+        [DataType(DataType.MultilineText)]
         public string Note { get; set; }
     }
 

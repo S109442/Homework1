@@ -56,7 +56,7 @@
                     <tbody>
                         @foreach (var record in Model.LatestThreeRecords)
                         {
-                            <tr>
+                            <tr class="@(record.Category == 1 ? "table-primary" : "table-danger")">
                                 <td>@record.Id</td>
                                 <td>@(record.Category == 1 ? "收入" : record.Category == 2 ? "支出" : "未知")</td>
                                 <td>@record.Amount</td>

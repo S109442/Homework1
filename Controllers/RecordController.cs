@@ -11,10 +11,9 @@ namespace Homework1.Controllers
         private readonly IAccountBookService _accountBookService;
         private readonly AppDbContext _context;
 
-        public RecordController(IAccountBookService accountBookService, AppDbContext context)
+        public RecordController(IAccountBookService accountBookService)
         {
             _accountBookService = accountBookService;
-            _context = context;
         }
 
         // GET: /Record
@@ -54,8 +53,7 @@ namespace Homework1.Controllers
                 Remarkkk = viewModel.NewRecord.Note
             };
 
-            _context.AccountBook.Add(newAccountBook);
-            await _context.SaveChangesAsync();
+            await _accountBookService.AddAccountBookAsync(newAccountBook);
 
             return RedirectToAction("Index");
         }
