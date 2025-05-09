@@ -1,7 +1,9 @@
-﻿@model Homework1.Models.RecordPageViewModel
+﻿@using X.PagedList.Mvc.Core
+@model Homework1.Models.RecordPageViewModel
 
 @{
     Layout = "_Layout";
+    var startIndex = (Model.LatestThreeRecords.PageNumber - 1) * Model.LatestThreeRecords.PageSize;
 }
 
 <div class="container mt-5">
@@ -10,6 +12,8 @@
         <div class="col-md-6">
             <h2 class="mb-4">新增記錄</h2>
             <form asp-action="Add" method="post">
+                @* 加入隱藏的頁碼欄位 *@
+                <input type="hidden" name="page" value="@Model.LatestThreeRecords.PageNumber" />
                 <div class="mb-3">
                     <label asp-for="NewRecord.Category" class="form-label"></label>
                     <select asp-for="NewRecord.Category" class="form-select">
@@ -54,18 +58,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var record in Model.LatestThreeRecords)
+                        @foreach (var (item, index) in Model.LatestThreeRecords.Select((record, index) => (record, index)))
                         {
-                            <tr class="@(record.Category == 1 ? "table-primary" : "table-danger")">
-                                <td>@record.Id</td>
-                                <td>@(record.Category == 1 ? "收入" : record.Category == 2 ? "支出" : "未知")</td>
-                                <td>@record.Amount</td>
-                                <td>@record.Date.ToString("yyyy-MM-dd")</td>
-                                <td>@record.Note</td>
+                            <tr class="@(item.Category == 1 ? "table-primary" : "table-danger")">
+                                <td>@(startIndex + index + 1)</td>
+                                <td>@(item.Category == 1 ? "收入" : item.Category == 2 ? "支出" : "未知")</td>
+                                <td>@item.Amount</td>
+                                <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                                <td>@item.Note</td>
                             </tr>
                         }
                     </tbody>
                 </table>
+                <!-- 加入分頁控制項 -->
+                <div class="d-flex justify-content-center">
+                    @Html.PagedListPager(Model.LatestThreeRecords, page => Url.Action("Index", new { page }),
+                             new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" }
+                })
+                </div>
             }
             else
             {

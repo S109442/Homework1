@@ -1,32 +1,30 @@
 ﻿using Homework1.Data;
 using Homework1.Models;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
+using X.PagedList.EF;
 
 namespace Homework1.Services
 {
     public class AccountBookService(AppDbContext _context) : IAccountBookService
     {
-        public async Task<List<RecordViewModel>> GetLatestRecordViewModelsAsync(int count)
+        public async Task<IPagedList<RecordViewModel>> GetLatestRecordViewModelsAsync(int pageNumber, int pageSize)
         {
-            var latestRecords = await _context.AccountBook
-                .OrderByDescending(r => r.Dateee)
-                .Take(count)
-                .ToListAsync();
+            var records = await _context.AccountBook
+               .OrderByDescending(r => r.Dateee)
+               .Select(r => new RecordViewModel
+               {
+                   Id = 0,//移除序號計算，預設為0 
+                   Category = r.Categoryyy + 1,
+                   Amount = r.Amounttt,
+                   Date = r.Dateee,
+                   Note = r.Remarkkk
+               })
+               .ToPagedListAsync(pageNumber, pageSize);
 
-            var viewModels = latestRecords
-                .Select((r, index) => new RecordViewModel
-                {
-                    // 產生從1開始的順序號碼
-                    Id = index + 1,
-                    Category = r.Categoryyy + 1,
-                    Amount = r.Amounttt,
-                    Date = r.Dateee,
-                    Note = r.Remarkkk
-                })
-                .ToList();
-
-            return viewModels;
+            return (IPagedList<RecordViewModel>)records;
         }
+
         public async Task AddAccountBookAsync(AccountBook accountBook)
         {
             _context.AccountBook.Add(accountBook);

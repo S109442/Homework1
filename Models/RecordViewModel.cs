@@ -1,6 +1,8 @@
 ﻿using Homework1.Models.Validations;
 using System.ComponentModel.DataAnnotations;
 
+using X.PagedList;
+
 namespace Homework1.Models
 {
     public class RecordViewModel
@@ -27,15 +29,15 @@ namespace Homework1.Models
         [Required(ErrorMessage = "請輸入Note")]
         [StringLength(100, ErrorMessage = "Note不能超過100字")]
         [DataType(DataType.MultilineText)]
-        public string Note { get; set; }
+        public string Note { get; set; } = string.Empty; // Initialize with a default non-null value
     }
 
     public class RecordPageViewModel
     {
         // 上方表單使用的資料模型
         public RecordViewModel NewRecord { get; set; } = new RecordViewModel();
-
+        public IPagedList<RecordViewModel>? LatestThreeRecords { get; set; }
         // 下方顯示用的三筆資料
-        public List<RecordViewModel> LatestThreeRecords { get; set; } = new List<RecordViewModel>();
+        //public List<RecordViewModel> LatestThreeRecords { get; set; } = new List<RecordViewModel>();
     }
 }
