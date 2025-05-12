@@ -22,7 +22,7 @@ namespace Homework1.Services
                })
                .ToPagedListAsync(pageNumber, pageSize);
 
-            return (IPagedList<RecordViewModel>)records;
+            return records;
         }
 
         public async Task AddAccountBookAsync(AccountBook accountBook)

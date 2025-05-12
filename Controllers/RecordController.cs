@@ -3,24 +3,27 @@ using Microsoft.EntityFrameworkCore;
 using Homework1.Data;
 using Homework1.Models;
 using Homework1.Services;
+using Microsoft.Extensions.Options;
 
 namespace Homework1.Controllers
 {
     public class RecordController : Controller
     {
         private readonly IAccountBookService _accountBookService;
+        private readonly int _pageSize;
 
-        public RecordController(IAccountBookService accountBookService)
+        public RecordController(IAccountBookService accountBookService, IOptions<PageSettings> pageSettings)
         {
             _accountBookService = accountBookService;
+            _pageSize = pageSettings.Value.PageSize;
         }
 
         // GET: /Record
         public async Task<IActionResult> Index(int? page)
 
         {
-            int pageNumber = page ?? 1;
-            int pageSize = 5;
+            int pageNumber = (page.HasValue && page.Value > 0) ? page.Value : 1; 
+            int pageSize = _pageSize;
 
             var records = await _accountBookService.GetLatestRecordViewModelsAsync(pageNumber, pageSize);
 
@@ -31,7 +34,7 @@ namespace Homework1.Controllers
                 {
                     Date = DateTime.Today // 設定預設日期為今天
                 },
-                LatestThreeRecords = (X.PagedList.IPagedList<RecordViewModel>)records
+                LatestThreeRecords = records
             };
 
             return View(viewModel);
@@ -53,8 +56,8 @@ namespace Homework1.Controllers
                     }
                 }
                 // 如果驗證失敗，重新載入最新的三筆資料
-                int pageNumber = page ?? 1;
-                int pageSize = 5;
+                int pageNumber = (page.HasValue && page.Value > 0) ? page.Value : 1;
+                int pageSize = _pageSize;
                 viewModel.LatestThreeRecords = await _accountBookService.GetLatestRecordViewModelsAsync(pageNumber, pageSize);
                 return View("Index", viewModel);
             }

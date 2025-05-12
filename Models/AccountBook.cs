@@ -11,13 +11,13 @@ namespace Homework1.Models
         public int Categoryyy { get; set; }
 
         [Required]
-        [Range(1,int.MaxValue,ErrorMessage = "Amount要大於0")]
+        [Range(1,int.MaxValue,ErrorMessage = "{0}要大於0")]
         public int Amounttt { get; set; }
 
         [Required]
         public DateTime Dateee { get; set; }
 
-        [MaxLength(500,ErrorMessage ="Note不能超過500字")]
+        [MaxLength(500,ErrorMessage ="{0}不能超過500字")]
         public string Remarkkk { get; set; } = string.Empty; // Initialize with a default non-null value
     }
 }

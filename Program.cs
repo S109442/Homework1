@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Homework1.Data;
 using Homework1.Services;
+using Homework1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // 註冊 IAccountBookService 與其實作 AccountBookService
 builder.Services.AddTransient<IAccountBookService, AccountBookService>();
+builder.Services.Configure<PageSettings>(builder.Configuration.GetSection("PageSettings"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
