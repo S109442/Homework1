@@ -11,11 +11,13 @@ namespace Homework1.Controllers
     {
         private readonly IAccountBookService _accountBookService;
         private readonly int _pageSize;
+        private readonly ILogger<RecordController> _logger;
 
-        public RecordController(IAccountBookService accountBookService, IOptions<PageSettings> pageSettings)
+        public RecordController(IAccountBookService accountBookService, IOptions<PageSettings> pageSettings, ILogger<RecordController> logger)
         {
             _accountBookService = accountBookService;
             _pageSize = pageSettings.Value.PageSize;
+            _logger = logger;
         }
 
         // GET: /Record
@@ -51,8 +53,8 @@ namespace Homework1.Controllers
                 {
                     foreach (var error in modelStateEntry.Errors)
                     {
-                        // 將錯誤訊息記錄到開發環境的輸出中
-                        System.Diagnostics.Debug.WriteLine(error.ErrorMessage);
+                        // 將錯誤訊息輸出
+                        _logger.LogError(error.ErrorMessage);
                     }
                 }
                 // 如果驗證失敗，重新載入最新的三筆資料
@@ -74,7 +76,7 @@ namespace Homework1.Controllers
 
             await _accountBookService.AddAccountBookAsync(newAccountBook);
             // 重導向時保留頁碼
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index");
         }
     }
 }
