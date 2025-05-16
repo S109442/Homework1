@@ -11,14 +11,14 @@ namespace Homework1.Services
         public async Task<IPagedList<RecordViewModel>> GetLatestRecordViewModelsAsync(int pageNumber, int pageSize)
         {
             var records = await _context.AccountBook
-               .OrderByDescending(r => r.Dateee)
+               .OrderByDescending(r => r.Date)
                .Select(r => new RecordViewModel
                {
                    Id = 0,//移除序號計算，預設為0 
-                   Category = r.Categoryyy + 1,
-                   Amount = r.Amounttt,
-                   Date = r.Dateee,
-                   Note = r.Remarkkk
+                   Category = r.Category,
+                   Amount = r.Amount,
+                   Date = r.Date,
+                   Remark = r.Remark
                })
                .ToPagedListAsync(pageNumber, pageSize);
 

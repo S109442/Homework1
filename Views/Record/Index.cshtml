@@ -3,7 +3,8 @@
 
 @{
     Layout = "_Layout";
-    var startIndex = (Model.LatestThreeRecords.PageNumber - 1) * Model.LatestThreeRecords.PageSize;
+    var startIndex = Model.LatestThreeRecords?.PageNumber != null ?
+        (Model.LatestThreeRecords.PageNumber - 1) * Model.LatestThreeRecords.PageSize : 0;
 }
 
 <div class="container mt-5">
@@ -18,8 +19,8 @@
                     <label asp-for="NewRecord.Category" class="form-label"></label>
                     <select asp-for="NewRecord.Category" class="form-select">
                         <option value="">-- 請選擇 --</option>
-                        <option value="1">收入</option>
-                        <option value="2">支出</option>
+                        <option value="0">收入</option>
+                        <option value="1">支出</option>
                     </select>
                     <span asp-validation-for="NewRecord.Category" class="text-danger"></span>
                 </div>
@@ -34,9 +35,9 @@
                     <span asp-validation-for="NewRecord.Date" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="NewRecord.Note" class="form-label"></label>
-                    <textarea asp-for="NewRecord.Note" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="NewRecord.Note" class="text-danger"></span>
+                    <label asp-for="NewRecord.Remark" class="form-label"></label>
+                    <textarea asp-for="NewRecord.Remark" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="NewRecord.Remark" class="text-danger"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">新增記錄</button>
             </form>
@@ -62,10 +63,10 @@
                         {
                             <tr class="@(item.Category == 1 ? "table-primary" : "table-danger")">
                                 <td>@(startIndex + index + 1)</td>
-                                <td>@(item.Category == 1 ? "收入" : item.Category == 2 ? "支出" : "未知")</td>
+                                <td>@(item.Category == 0 ? "收入" : item.Category == 1 ? "支出" : "未知")</td>
                                 <td>@item.Amount</td>
                                 <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                                <td>@item.Note</td>
+                                <td>@item.Remark</td>
                             </tr>
                         }
                     </tbody>

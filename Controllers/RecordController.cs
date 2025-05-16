@@ -69,10 +69,10 @@ namespace Homework1.Controllers
             var newAccountBook = new AccountBook
             {
                 Id = Guid.NewGuid(),
-                Categoryyy = viewModel.NewRecord.Category-1, // Corrected property name
-                Amounttt = viewModel.NewRecord.Amount,
-                Dateee = viewModel.NewRecord.Date,
-                Remarkkk = viewModel.NewRecord.Note
+                Category = viewModel.NewRecord.Category, // Corrected property name
+                Amount = viewModel.NewRecord.Amount,
+                Date = viewModel.NewRecord.Date,
+                Remark = viewModel.NewRecord.Remark
             };
 
             await _accountBookService.AddAccountBookAsync(newAccountBook);

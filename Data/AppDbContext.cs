@@ -12,5 +12,24 @@ namespace Homework1.Data
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AccountBook>()
+                .Property(b => b.Category)
+                .HasColumnName("Categoryyy");
+
+            modelBuilder.Entity<AccountBook>()
+                .Property(b => b.Amount)
+                .HasColumnName("Amounttt");
+
+            modelBuilder.Entity<AccountBook>()
+                .Property(b => b.Date)
+                .HasColumnName("Dateee");
+
+            modelBuilder.Entity<AccountBook>()
+                .Property(b => b.Remark)
+                .HasColumnName("Remarkkk");
+        }
     }
 }

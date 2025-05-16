@@ -10,11 +10,11 @@ namespace Homework1.Models
         public int Id { get; set; } // 自動編號（顯示用）
 
         [Required]
-        [Range(1, 2, ErrorMessage = "請選擇收入或支出")]
-        public int Category { get; set; } // 1: 收入, 2: 支出
+        [Range(0, 1, ErrorMessage = "請選擇收入或支出")]
+        public int Category { get; set; } // 0: 收入, 1: 支出
 
-        public string CategoryDisplay => Category == 1 ? "收入" :
-                                         Category == 2 ? "支出" : "未知";
+        public string CategoryDisplay => Category == 0 ? "收入" :
+                                         Category == 1 ? "支出" : "未知";
 
         [Required]
         [Range(1, int.MaxValue,ErrorMessage ="{0}超出範圍!")]
@@ -29,7 +29,7 @@ namespace Homework1.Models
         [Required(ErrorMessage = "請輸入{0}")]
         [StringLength(100, ErrorMessage = "{0}不能超過100字")]
         [DataType(DataType.MultilineText)]
-        public string Note { get; set; } = string.Empty; // Initialize with a default non-null value
+        public string Remark { get; set; } = string.Empty; // Initialize with a default non-null value
     }
 
     public class RecordPageViewModel
