@@ -4,6 +4,7 @@ using Homework1.Data;
 using Homework1.Models;
 using Homework1.Services;
 using Microsoft.Extensions.Options;
+using Homework1.Helper;
 
 namespace Homework1.Controllers
 {
@@ -24,10 +25,10 @@ namespace Homework1.Controllers
         public async Task<IActionResult> Index(int? page)
 
         {
-            int pageNumber = (page.HasValue && page.Value > 0) ? page.Value : 1; 
-            int pageSize = _pageSize;
+            //int pageNumber = page.ToPageIndex(); 
+            //int pageSize = _pageSize;
 
-            var records = await _accountBookService.GetLatestRecordViewModelsAsync(pageNumber, pageSize);
+            var records = await _accountBookService.GetLatestRecordViewModelsAsync(page.ToPageIndex(), _pageSize);
 
 
             var viewModel = new RecordPageViewModel
@@ -58,9 +59,9 @@ namespace Homework1.Controllers
                     }
                 }
                 // 如果驗證失敗，重新載入最新的三筆資料
-                int pageNumber = (page.HasValue && page.Value > 0) ? page.Value : 1;
-                int pageSize = _pageSize;
-                viewModel.LatestThreeRecords = await _accountBookService.GetLatestRecordViewModelsAsync(pageNumber, pageSize);
+                //int pageNumber = page.ToPageIndex();
+                //int pageSize = _pageSize;
+                viewModel.LatestThreeRecords = await _accountBookService.GetLatestRecordViewModelsAsync(page.ToPageIndex(), _pageSize);
                 return View("Index", viewModel);
             }
 
